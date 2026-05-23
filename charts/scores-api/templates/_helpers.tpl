@@ -1,14 +1,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "mychart.name" -}}
+{{- define "scores-api.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "mychart.fullname" -}}
+{{- define "scores-api.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -19,4 +19,13 @@ Create a default fully qualified app name.
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{/*
+Common labels.
+*/}}
+{{- define "scores-api.labels" -}}
+app: {{ include "scores-api.name" . }}
+chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+release: {{ .Release.Name }}
 {{- end }}

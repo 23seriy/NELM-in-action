@@ -1,0 +1,6 @@
+apiVersion: v2
+name: scores-api
+description: NBA Scores API — a Helm chart for demonstrating Nelm features
+type: application
+version: 0.1.0
+appVersion: "1.0"

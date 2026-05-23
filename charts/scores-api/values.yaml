@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: scores-api
+  pullPolicy: IfNotPresent
+  tag: "v1"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+config:
+  welcomeMessage: "NBA Live Scores"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

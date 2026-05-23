@@ -1,0 +1,7 @@
+replicaCount: 3
+
+image:
+  tag: "v2"
+
+config:
+  welcomeMessage: "NBA Live Scores v2 — Now with Play-by-Play!"

@@ -1,0 +1,4 @@
+image:
+  repository: nginx
+  tag: "does-not-exist"
+  pullPolicy: Never
