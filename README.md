@@ -82,7 +82,13 @@ This installs `minikube` and `kubectl` via Homebrew if not already present.
 ./scripts/02-start-cluster.sh
 ```
 
-Creates a Minikube cluster (`nelm-demo` profile) with 2 CPUs and 4 GB RAM, then downloads and installs the Nelm CLI.
+Creates a Minikube cluster (`nelm-demo` profile) with 2 CPUs and 4 GB RAM, then downloads and installs the Nelm CLI to `~/.local/bin`.
+
+> **Note:** If you want to run `nelm` commands directly in your terminal (outside the scripts), make sure `~/.local/bin` is on your PATH:
+> ```bash
+> export PATH="${HOME}/.local/bin:${PATH}"
+> ```
+> Add the line above to your `~/.zshrc` (or `~/.bashrc`) to make it permanent.
 
 ### Step 3: Build & Deploy the Application
 
