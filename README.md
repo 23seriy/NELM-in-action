@@ -171,10 +171,10 @@ Deploy charts directly from remote OCI registries. No `helm repo add` needed. Re
 
 ```bash
 nelm release install -n nelm-demo -r scores-api ./charts/scores-api \
-  --auto-rollback --values nelm/values-broken.yaml
+  --auto-rollback --timeout=60s --values nelm/values-broken.yaml
 ```
 
-Deploy a broken image intentionally. Nelm detects the failure and automatically reverts to the previous working state. Like `helm upgrade --atomic`, but more reliable.
+Deploy a broken image intentionally. Nelm detects the failure within the `--timeout` window and automatically reverts to the previous working state. Like `helm upgrade --atomic`, but more reliable. Without `--timeout`, Nelm waits indefinitely for the rollout.
 
 ## 📁 Project Structure
 

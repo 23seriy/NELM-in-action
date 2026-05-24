@@ -149,6 +149,7 @@ echo ""
 info "Deploying with a deliberately broken image to trigger rollback …"
 nelm release install -n "$NS" -r scores-api "$PROJECT_DIR/charts/scores-api" \
   --auto-rollback \
+  --timeout=60s \
   --set image.repository=nginx \
   --set image.tag=does-not-exist \
   --set image.pullPolicy=Never 2>&1 || true
