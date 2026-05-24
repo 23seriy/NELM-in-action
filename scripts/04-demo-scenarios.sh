@@ -120,10 +120,9 @@ info "Nelm can deploy charts directly from remote repositories."
 info "No need to helm repo add + helm pull first."
 echo ""
 info "Planning a remote nginx chart install …"
-nelm release plan install -n "$NS" -r nginx-remote \
+info "(Requires NELM_FEAT_REMOTE_CHARTS=true feature flag)"
+NELM_FEAT_REMOTE_CHARTS=true nelm release plan install -n "$NS" -r nginx-remote \
   --chart-version 19.1.1 oci://registry-1.docker.io/bitnamicharts/nginx 2>/dev/null || \
-nelm release plan install -n "$NS" -r nginx-remote \
-  --chart-version 19.1.1 bitnami/nginx 2>/dev/null || \
   warn "Remote chart plan requires network access. Skipping if offline."
 
 wait_for_enter

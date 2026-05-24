@@ -161,11 +161,11 @@ Equivalent to `helm template`. Renders the chart locally and outputs the resulti
 ### 5. Deploy a Remote Chart
 
 ```bash
-nelm release plan install -n nelm-demo -r nginx-remote \
+NELM_FEAT_REMOTE_CHARTS=true nelm release plan install -n nelm-demo -r nginx-remote \
   --chart-version 19.1.1 oci://registry-1.docker.io/bitnamicharts/nginx
 ```
 
-Deploy charts directly from remote OCI registries. No `helm repo add` needed.
+Deploy charts directly from remote OCI registries. No `helm repo add` needed. Remote chart support requires the `NELM_FEAT_REMOTE_CHARTS=true` feature flag.
 
 ### 6. Auto-Rollback on Failure
 
