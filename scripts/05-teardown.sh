@@ -3,6 +3,7 @@
 # 05 — Teardown: remove everything
 # ────────────────────────────────────────────────────────────────
 set -euo pipefail
+export PATH="${HOME}/.local/bin:${PATH}"
 
 PROFILE="nelm-demo"
 NS="nelm-demo"

@@ -3,6 +3,7 @@
 # 03 — Build images & deploy the app with Nelm
 # ────────────────────────────────────────────────────────────────
 set -euo pipefail
+export PATH="${HOME}/.local/bin:${PATH}"
 
 PROFILE="nelm-demo"
 NS="nelm-demo"
