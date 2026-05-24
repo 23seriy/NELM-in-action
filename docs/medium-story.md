@@ -130,10 +130,12 @@ Helm has `--atomic`, but it's known to be unreliable in edge cases. Nelm's `--au
 ```bash
 # Deploy a broken image — Nelm will detect the failure and revert
 nelm release install -n nelm-demo -r scores-api ./charts/scores-api \
-  --auto-rollback --timeout=60s --values nelm/values-broken.yaml
+  --auto-rollback --resource-readiness-timeout=30s --values nelm/values-broken.yaml
 ```
 
-Nelm detects the failed rollout within the timeout window, outputs the error clearly, and automatically restores the previous working release. The `--timeout=60s` flag is important here — without it, Nelm waits indefinitely for the rollout to succeed.
+Nelm detects the failed rollout within the readiness timeout, outputs the error clearly, and automatically restores the previous working release.
+
+One important subtlety: use `--resource-readiness-timeout` here, not `--timeout`. The global `--timeout` kills the entire Nelm process, bypassing the rollback logic. `--resource-readiness-timeout` fails only the readiness tracking, which triggers `--auto-rollback` properly.
 
 ## Feature 5: Remote Charts
 
