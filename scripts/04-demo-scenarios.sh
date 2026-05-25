@@ -3,6 +3,7 @@
 # 04 — Interactive demo scenarios for Nelm
 # ────────────────────────────────────────────────────────────────
 set -euo pipefail
+export PATH="${HOME}/.local/bin:${PATH}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
@@ -119,10 +120,9 @@ info "Nelm can deploy charts directly from remote repositories."
 info "No need to helm repo add + helm pull first."
 echo ""
 info "Planning a remote nginx chart install …"
-nelm release plan install -n "$NS" -r nginx-remote \
+info "(Requires NELM_FEAT_REMOTE_CHARTS=true feature flag)"
+NELM_FEAT_REMOTE_CHARTS=true nelm release plan install -n "$NS" -r nginx-remote \
   --chart-version 19.1.1 oci://registry-1.docker.io/bitnamicharts/nginx 2>/dev/null || \
-nelm release plan install -n "$NS" -r nginx-remote \
-  --chart-version 19.1.1 bitnami/nginx 2>/dev/null || \
   warn "Remote chart plan requires network access. Skipping if offline."
 
 wait_for_enter
@@ -149,6 +149,7 @@ echo ""
 info "Deploying with a deliberately broken image to trigger rollback …"
 nelm release install -n "$NS" -r scores-api "$PROJECT_DIR/charts/scores-api" \
   --auto-rollback \
+  --resource-readiness-timeout=30s \
   --set image.repository=nginx \
   --set image.tag=does-not-exist \
   --set image.pullPolicy=Never 2>&1 || true

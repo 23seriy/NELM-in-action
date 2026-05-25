@@ -49,6 +49,12 @@ cd nelm-in-action
 ./scripts/03-deploy.sh
 ```
 
+The `02-start-cluster.sh` script downloads the Nelm binary from [tuf.nelm.sh](https://tuf.nelm.sh) and installs it to `~/.local/bin/` — no `sudo` required. If you want to run `nelm` commands directly in your terminal (outside the scripts), make sure `~/.local/bin` is on your PATH:
+
+```bash
+export PATH="${HOME}/.local/bin:${PATH}"
+```
+
 After the deploy script runs, you'll notice something immediately different from Helm: **Nelm printed the pod logs and Kubernetes events in real-time** as the deployment progressed. No separate terminal needed.
 
 ## Feature 1: `terraform plan` for Kubernetes
@@ -124,21 +130,25 @@ Helm has `--atomic`, but it's known to be unreliable in edge cases. Nelm's `--au
 ```bash
 # Deploy a broken image — Nelm will detect the failure and revert
 nelm release install -n nelm-demo -r scores-api ./charts/scores-api \
-  --auto-rollback -f nelm/values-broken.yaml
+  --auto-rollback --resource-readiness-timeout=30s --values nelm/values-broken.yaml
 ```
 
-Nelm detects the failed rollout, outputs the error clearly, and automatically restores the previous working release.
+Nelm detects the failed rollout within the readiness timeout, outputs the error clearly, and automatically restores the previous working release.
+
+One important subtlety: use `--resource-readiness-timeout` here, not `--timeout`. The global `--timeout` kills the entire Nelm process, bypassing the rollback logic. `--resource-readiness-timeout` fails only the readiness tracking, which triggers `--auto-rollback` properly.
 
 ## Feature 5: Remote Charts
 
 With Helm, you need to `helm repo add`, `helm repo update`, then `helm install`. Nelm simplifies this:
 
 ```bash
-nelm release plan install -n nelm-demo -r nginx-remote \
+NELM_FEAT_REMOTE_CHARTS=true nelm release plan install -n nelm-demo -r nginx-remote \
   --chart-version 19.1.1 oci://registry-1.docker.io/bitnamicharts/nginx
 ```
 
 One command. No repo management.
+
+> **Note:** Remote chart support and the `--chart-version` flag are currently behind the `NELM_FEAT_REMOTE_CHARTS=true` feature flag in Nelm v1.24.x.
 
 ## Migrating from Helm
 
@@ -151,6 +161,9 @@ The migration is straightforward — it's mostly renaming commands:
 | `helm template` | `nelm chart render` |
 | `helm dependency build` | `nelm chart dependency download` |
 | `helm list` | `nelm release list` |
+| `helm install -f values.yaml` | `nelm release install --values values.yaml` |
+
+> **Heads up:** Nelm uses `--values` instead of Helm's `-f` shorthand for additional values files. Most other flags map directly.
 
 Since Nelm uses Helm Releases for state storage, you can literally swap the command in your CI pipeline and everything keeps working. No state migration, no downtime.
 

@@ -82,7 +82,13 @@ This installs `minikube` and `kubectl` via Homebrew if not already present.
 ./scripts/02-start-cluster.sh
 ```
 
-Creates a Minikube cluster (`nelm-demo` profile) with 2 CPUs and 4 GB RAM, then downloads and installs the Nelm CLI.
+Creates a Minikube cluster (`nelm-demo` profile) with 2 CPUs and 4 GB RAM, then downloads and installs the Nelm CLI to `~/.local/bin`.
+
+> **Note:** If you want to run `nelm` commands directly in your terminal (outside the scripts), make sure `~/.local/bin` is on your PATH:
+> ```bash
+> export PATH="${HOME}/.local/bin:${PATH}"
+> ```
+> Add the line above to your `~/.zshrc` (or `~/.bashrc`) to make it permanent.
 
 ### Step 3: Build & Deploy the Application
 
@@ -155,20 +161,22 @@ Equivalent to `helm template`. Renders the chart locally and outputs the resulti
 ### 5. Deploy a Remote Chart
 
 ```bash
-nelm release plan install -n nelm-demo -r nginx-remote \
+NELM_FEAT_REMOTE_CHARTS=true nelm release plan install -n nelm-demo -r nginx-remote \
   --chart-version 19.1.1 oci://registry-1.docker.io/bitnamicharts/nginx
 ```
 
-Deploy charts directly from remote OCI registries. No `helm repo add` needed.
+Deploy charts directly from remote OCI registries. No `helm repo add` needed. Remote chart support requires the `NELM_FEAT_REMOTE_CHARTS=true` feature flag.
 
 ### 6. Auto-Rollback on Failure
 
 ```bash
 nelm release install -n nelm-demo -r scores-api ./charts/scores-api \
-  --auto-rollback -f nelm/values-broken.yaml
+  --auto-rollback --resource-readiness-timeout=30s --values nelm/values-broken.yaml
 ```
 
-Deploy a broken image intentionally. Nelm detects the failure and automatically reverts to the previous working state. Like `helm upgrade --atomic`, but more reliable.
+Deploy a broken image intentionally. Nelm detects the failure within the readiness timeout and automatically reverts to the previous working state. Like `helm upgrade --atomic`, but more reliable.
+
+> **Tip:** Use `--resource-readiness-timeout` (not `--timeout`) with `--auto-rollback`. The global `--timeout` kills the entire process without triggering rollback, while `--resource-readiness-timeout` fails the readiness check and lets the rollback logic run.
 
 ## 📁 Project Structure
 
