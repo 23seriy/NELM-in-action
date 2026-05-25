@@ -7,7 +7,7 @@ A hands-on project demonstrating **[Nelm](https://github.com/werf/nelm)** — th
 ![Minikube](https://img.shields.io/badge/Minikube-local-F7B93E?logo=kubernetes&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 
-> 📝 **Read the full walkthrough on Medium:** [Nelm in Action: The Modern Helm Alternative on Your Laptop](https://medium.com/@sergeiolshanetski/nelm-in-action)
+> 📝 **Read the full walkthrough on Medium:** [Nelm in Action: The Modern Helm Alternative on Your Laptop](https://medium.com/@sergeiolshanetski/nelm-in-action-the-modern-helm-alternative-on-your-laptop-564f976c3e2a)
 
 ## 🏗️ Architecture
 
