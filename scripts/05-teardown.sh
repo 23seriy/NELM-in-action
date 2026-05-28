@@ -11,6 +11,12 @@ NS="nelm-demo"
 echo "⚓ Nelm in Action — Teardown"
 echo "=============================="
 
+read -rp "This will delete the Minikube cluster '$PROFILE'. Continue? (y/N) " answer
+if [[ ! "$answer" =~ ^[Yy]$ ]]; then
+  echo "Cancelled."
+  exit 0
+fi
+
 echo "🗑️  Uninstalling Nelm releases …"
 nelm release uninstall -n "$NS" -r scores-api 2>/dev/null || true
 nelm release uninstall -n "$NS" -r nginx-remote 2>/dev/null || true
